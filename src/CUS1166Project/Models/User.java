@@ -1,21 +1,23 @@
 package CUS1166Project.Models;
 
+import CUS1166Project.Utilities.Encryptor;
+
 public class UserModel {
     String username;
     String password;
     String department;
 
     //constructor for a new UserModel with all parameters
-    public UserModel(String username, String password, String department) {
+    public UserModel(String username, String password, String department) throws Exception {
         this.username = username;
-        this.password = password;
+        this.password = Encryptor.encryptString(password);
         this.department = department;
     }
 
     //constructor for a new UserModel with only username and password
-    public UserModel(String username, String password) {
+    public UserModel(String username, String password) throws Exception {
         this.username = username;
-        this.password = password;
+        this.password = Encryptor.encryptString(password);
     }
 
     public String getUsername() {
