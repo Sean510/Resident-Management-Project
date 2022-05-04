@@ -1,7 +1,7 @@
 package CUS1166Project.Models;
 
-public class RequestModel {
-    int id;
+public class Request {
+    int ID;
     String type;
     int residentID;
     String dateCreated;
@@ -10,8 +10,8 @@ public class RequestModel {
     int completedBy;
 
     //constructor with all parameters
-    public RequestModel(int id, String type, int residentID, String dateCreated, String description, String dateCompleted, int completedBy) {
-        this.id = id;
+    public Request(int id, String type, int residentID, String dateCreated, String description, String dateCompleted, int completedBy) {
+        this.ID = id;
         this.type = type;
         this.residentID = residentID;
         this.dateCreated = dateCreated;
@@ -21,8 +21,8 @@ public class RequestModel {
     }
 
     //constructor with only parameters necessary for creating a new request
-    public RequestModel(int id, String type, int residentID, String dateCreated, String description) {
-        this.id = id;
+    public Request(int id, String type, int residentID, String dateCreated, String description) {
+        this.ID = id;
         this.type = type;
         this.residentID = residentID;
         this.dateCreated = dateCreated;
@@ -30,7 +30,7 @@ public class RequestModel {
     }
 
     public int getID() {
-        return id;
+        return this.ID;
     }
 
     public String getType() {
@@ -56,4 +56,5 @@ public class RequestModel {
     public int completedBy() {
         return completedBy;
     }
+
  }

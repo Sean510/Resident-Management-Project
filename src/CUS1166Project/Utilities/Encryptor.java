@@ -1,4 +1,4 @@
-package CUS1166Project;
+package CUS1166Project.Utilities;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

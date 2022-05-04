@@ -1,8 +1,7 @@
 package CUS1166Project.Views;
 
 import CUS1166Project.Controllers.UserController;
-import CUS1166Project.Models.UserModel;
-import com.sun.jdi.connect.Connector;
+import CUS1166Project.Models.User;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,11 +12,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.util.Objects;
-
 public class LoginView {
 
-    public static void displayMenu(Stage stage) {
+    public static void display(Stage stage) {
 
         //actual window surrounding the scene
         stage.setTitle("SR. Housing");
@@ -49,10 +46,21 @@ public class LoginView {
         //function to execute login if user presses enter while in username textfield
         tfUsername.setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ENTER){
-                UserModel user = new UserModel(tfUsername.getText(), tfPassword.getText());
                 try {
-                    UserController.userExists(user);
-                    user.setDepartment(UserController.getDepartment(user));
+                    User user = new User(tfUsername.getText(), tfPassword.getText());
+                    if (UserController.validCredentials(user)) {
+                        user.setType(UserController.getType(user));
+                        switch (user.getType().toLowerCase()) {
+                            case "admin" -> AdminMenuView.display(stage, user);
+                            case "maintenance" -> MaintenanceMenuView.display(stage, user);
+                            case "nurse" -> NurseMenuView.display(stage, user);
+//                            case "resident" -> ResidentMenuView.display(stage, user);
+                        }
+                    } else {
+                        UserController.alertInvalid();
+                        tfUsername.clear();
+                        tfPassword.clear();
+                    }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -63,10 +71,21 @@ public class LoginView {
         //function to execute login if user presses enter while in password textfield
         tfPassword.setOnKeyPressed(e -> {
             if(e.getCode() == KeyCode.ENTER){
-                UserModel user = new UserModel(tfUsername.getText(), tfPassword.getText());
                 try {
-                    UserController.userExists(user);
-                    user.setDepartment(UserController.getDepartment(user));
+                    User user = new User(tfUsername.getText(), tfPassword.getText());
+                    if (UserController.validCredentials(user)) {
+                        user.setType(UserController.getType(user));
+                        switch (user.getType().toLowerCase()) {
+                            case "admin" -> AdminMenuView.display(stage, user);
+                            case "maintenance" -> MaintenanceMenuView.display(stage, user);
+                            case "nurse" -> NurseMenuView.display(stage, user);
+//                            case "resident" -> ResidentMenuView.display(stage, user);
+                        }
+                    } else {
+                        UserController.alertInvalid();
+                        tfUsername.clear();
+                        tfPassword.clear();
+                    }
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -77,12 +96,20 @@ public class LoginView {
         //Login button
         Button btLogin = new Button("Login");
         btLogin.setOnAction(e -> {
-            UserModel user = new UserModel(tfUsername.getText(), tfPassword.getText());
             try {
-                UserController.userExists(user);
-                user.setDepartment(UserController.getDepartment(user));
-                if(user.getDepartment().toLowerCase().equals("admin")) {
-                    AdminMenuView.displayMenu(stage, user);
+                User user = new User(tfUsername.getText(), tfPassword.getText());
+                if (UserController.validCredentials(user)) {
+                    user.setType(UserController.getType(user));
+                    switch (user.getType().toLowerCase()) {
+                        case "admin" -> AdminMenuView.display(stage, user);
+                        case "maintenance" -> MaintenanceMenuView.display(stage, user);
+                        case "nurse" -> NurseMenuView.display(stage, user);
+//                            case "resident" -> ResidentMenuView.display(stage, user);
+                    }
+                } else {
+                    UserController.alertInvalid();
+                    tfUsername.clear();
+                    tfPassword.clear();
                 }
 
             } catch (Exception ex) {

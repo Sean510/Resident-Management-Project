@@ -1,4 +1,4 @@
-package CUS1166Project;
+package CUS1166Project.Utilities;
 import java.sql.*;
 
 public class Connect {
@@ -14,7 +14,7 @@ public class Connect {
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("Driver Loaded");
             con = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/srHousing", "root", "FWnShPG/dzS+6g^");
+                    "jdbc:mysql://localhost:3306/seniorhousing", "root", "FWnShPG/dzS+6g^");
             System.out.println("Connection Successful");
             st = con.createStatement();
             System.out.println("Statement Created");

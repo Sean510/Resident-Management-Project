@@ -2,20 +2,20 @@ package CUS1166Project.Models;
 
 import CUS1166Project.Utilities.Encryptor;
 
-public class UserModel {
+public class User {
     String username;
     String password;
-    String department;
+    String type;
 
     //constructor for a new UserModel with all parameters
-    public UserModel(String username, String password, String department) throws Exception {
+    public User(String username, String password, String type) throws Exception {
         this.username = username;
         this.password = Encryptor.encryptString(password);
-        this.department = department;
+        this.type = type;
     }
 
     //constructor for a new UserModel with only username and password
-    public UserModel(String username, String password) throws Exception {
+    public User(String username, String password) throws Exception {
         this.username = username;
         this.password = Encryptor.encryptString(password);
     }
@@ -28,11 +28,11 @@ public class UserModel {
         return password;
     }
 
-    public String getDepartment() {
-        return department;
+    public String getType() {
+        return type;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public void setType(String department) {
+        this.type = department;
     }
 }

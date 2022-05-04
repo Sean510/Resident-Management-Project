@@ -1,6 +1,6 @@
 package CUS1166Project.Views;
 
-import CUS1166Project.Controllers.EmployeeController;
+import CUS1166Project.Controllers.UserController;
 import CUS1166Project.Utilities.Encryptor;
 import CUS1166Project.Models.User;
 import javafx.geometry.Insets;
@@ -9,7 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class EmployeeView {
+public class UserView {
 
     /*********************************************
     ** DISPLAYS MAIN MENU FOR MANAGING USERS **
@@ -22,28 +22,28 @@ public class EmployeeView {
         grid.setVgap(5);
         grid.setHgap(10);
 
-        //add employee button
-        Button btAddEmployee = new Button("Add Employee");
-        btAddEmployee.setOnAction(e -> {
+        //add user button
+        Button btAddUser = new Button("Add User");
+        btAddUser.setOnAction(e -> {
             try {
-                displayAddEmployee(stage, user);
+                displayAddUser(stage, user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btAddEmployee,0,0);
+        GridPane.setConstraints(btAddUser,0,0);
 
 
-        //remove employee button
-        Button btDeleteEmployee = new Button("Delete Employee");
-        btDeleteEmployee.setOnAction(e -> {
+        //remove user button
+        Button btDeleteUser = new Button("Delete User");
+        btDeleteUser.setOnAction(e -> {
             try {
-                displayDeleteEmployee(stage, user);
+                displayDeleteUser(stage, user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btDeleteEmployee,0,1);
+        GridPane.setConstraints(btDeleteUser,0,1);
 
 
         //edit password button
@@ -82,7 +82,7 @@ public class EmployeeView {
         GridPane.setConstraints(btMainMenu,0,4);
 
         // ADDS ALL BUTTONS TO GRID
-        grid.getChildren().addAll(btAddEmployee, btDeleteEmployee, btEditPassword, btMainMenu);
+        grid.getChildren().addAll(btAddUser, btDeleteUser, btEditPassword, btMainMenu);
 
         //casts the window with the scene in it
         Scene scene = new Scene(grid,300,200);
@@ -93,7 +93,7 @@ public class EmployeeView {
     /******************************************
     **  DISPLAYS MENU FOR ADDING AN EMPLOYEE  **
      *****************************************/
-    public static void displayAddEmployee(Stage stage, User user) {
+    public static void displayAddUser(Stage stage, User user) {
         //actual window surrounding the scene
         stage.setTitle("SR. Housing");
 
@@ -120,42 +120,42 @@ public class EmployeeView {
         tfPassword.setPromptText("password");
         GridPane.setConstraints(tfPassword,1,1);
 
-        //Employee type label
-        Label type = new Label("Department: ");
+        //User type label
+        Label type = new Label("Type: ");
         GridPane.setConstraints(type,0,2);
 
-        //Employee type input
-        ChoiceBox<String> cbEmployeeType = new ChoiceBox<>();
-        cbEmployeeType.getItems().add("Administration");
-        cbEmployeeType.getItems().add("Front Desk");
-        cbEmployeeType.getItems().add("Maintenance");
-        cbEmployeeType.getItems().add("Nursing");
-        GridPane.setConstraints(cbEmployeeType, 1, 2);
+        //User type input
+        ChoiceBox<String> cbUserType = new ChoiceBox<>();
+        cbUserType.getItems().add("Admin");
+        cbUserType.getItems().add("Maintenance");
+        cbUserType.getItems().add("Nurse");
+        cbUserType.getItems().add("Resident");
+        GridPane.setConstraints(cbUserType, 1, 2);
 
-        //button to add new employee
-        Button btAddEmployee = new Button("Add Employee");
-        btAddEmployee.setOnAction(e -> {
+        //button to add new user
+        Button btAddUser = new Button("Add User");
+        btAddUser.setOnAction(e -> {
             try {
-                User newUser = new User(tfUsername.getText(), tfPassword.getText(), cbEmployeeType.getValue().replaceAll("\\s+", ""));
-                EmployeeController.addEmployee(newUser);
+                User newUser = new User(tfUsername.getText(), tfPassword.getText(), cbUserType.getValue());
+                UserController.addUser(newUser);
                 tfUsername.clear();
                 tfPassword.clear();
-                cbEmployeeType.setValue("");
+                cbUserType.setValue("");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
 
-        //button to go back to employee main menu
+        //button to go back to user main menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
             displayMenu(stage, user);
         });
 
         //sets layout of buttons
-        GridPane.setConstraints(btAddEmployee, 0, 4);
-        GridPane.setConstraints(btBack, 1, 4);
-        grid.getChildren().addAll(username, tfUsername, password, tfPassword, type, cbEmployeeType, btAddEmployee, btBack);
+        GridPane.setConstraints(btAddUser, 1, 4);
+        GridPane.setConstraints(btBack, 0, 4);
+        grid.getChildren().addAll(username, tfUsername, password, tfPassword, type, cbUserType, btAddUser, btBack);
 
         //sets scene
         Scene scene = new Scene(grid, 300, 200);
@@ -166,7 +166,7 @@ public class EmployeeView {
     /******************************************
     ** DISPLAYS MENU FOR DELETING AN EMPLOYEE **
      *****************************************/
-    public static void displayDeleteEmployee(Stage stage, User user) {
+    public static void displayDeleteUser(Stage stage, User user) {
         stage.setTitle("SR. Housing");
 
         GridPane grid = new GridPane();
@@ -202,14 +202,14 @@ public class EmployeeView {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btBack,1,4);
+        GridPane.setConstraints(btBack,0,4);
 
-        //delete employee button
-        Button btDeleteEmployee = new Button("Delete Employee");
-        btDeleteEmployee.setOnAction(e -> {
+        //delete user button
+        Button btDeleteUser = new Button("Delete User");
+        btDeleteUser.setOnAction(e -> {
             try {
                 User userToDelete = new User(tfUsername.getText(), tfPassword.getText());
-                EmployeeController.deleteEmployee(userToDelete);
+                UserController.deleteUser(userToDelete);
                 tfUsername.clear();
                 tfPassword.clear();
             } catch (Exception ex) {
@@ -218,9 +218,9 @@ public class EmployeeView {
         });
 
         //sets the layout together
-        GridPane.setConstraints(btDeleteEmployee,0,4);
+        GridPane.setConstraints(btDeleteUser,1,4);
 
-        grid.getChildren().addAll(username, tfUsername, password, tfPassword, btDeleteEmployee, btBack);
+        grid.getChildren().addAll(username, tfUsername, password, tfPassword, btDeleteUser, btBack);
 
         //casts the window with the scene in it
         Scene scene = new Scene(grid,300,200);
@@ -276,14 +276,14 @@ public class EmployeeView {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btBack,1,4);
+        GridPane.setConstraints(btBack,0,4);
 
         //Login button
         Button btUpdatePassword = new Button("Update Password");
         btUpdatePassword.setOnAction(e -> {
             try {
                 User userToUpdate = new User(tfUsername.getText(), tfOldPassword.getText());
-                EmployeeController.updatePassword(userToUpdate, Encryptor.encryptString(tfNewPassword.getText()));
+                UserController.updatePassword(userToUpdate, Encryptor.encryptString(tfNewPassword.getText()));
                 tfUsername.clear();
                 tfOldPassword.clear();
                 tfNewPassword.clear();
@@ -293,7 +293,7 @@ public class EmployeeView {
         });
 
         //sets the layout together
-        GridPane.setConstraints(btUpdatePassword,0,4);
+        GridPane.setConstraints(btUpdatePassword,1,4);
 
         grid.getChildren().addAll(username, tfUsername, oldPassword,tfOldPassword, newPassword, tfNewPassword,
                 btBack, btUpdatePassword

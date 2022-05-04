@@ -1,18 +1,19 @@
 package CUS1166Project.Models;
 
-public class ResidentModel {
+public class Resident {
     int id;
     String fName;
     String lName;
     String unit;
-    String phoneNum;
+    String eContact;
+    String username;
 
-    public ResidentModel(int id, String fName, String lName, String unit, String phoneNum) {
+    public Resident(int id, String fName, String lName, String unit, String eContact) {
         this.id = id;
         this.fName = fName;
         this.lName = lName;
         this.unit = unit;
-        this.phoneNum = phoneNum;
+        this.eContact = eContact;
     }
 
     public int getID() {
@@ -31,7 +32,11 @@ public class ResidentModel {
         return unit;
     }
 
-    public String getPhoneNum() {
-        return phoneNum;
+    public String getEContact() {
+        return eContact;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
