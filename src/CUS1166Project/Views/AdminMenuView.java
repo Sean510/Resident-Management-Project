@@ -86,32 +86,51 @@ public class AdminMenuView {
         });
         GridPane.setConstraints(btCreateQuarantine,1,4);
 
-        //label for lists
-        Label manageLists = new Label("Lists:");
+        //button to create missed meal
+        Button btCreateMeal = new Button("Missed Meal");
+        btCreateMeal.setOnAction(e -> {
+            MissedMealView.addMealMissed(stage, user);
+        });
+        GridPane.setConstraints(btCreateMeal,2,4);
+
+        //label for things in progress
+        Label manageLists = new Label("In Progress:");
         manageLists.setUnderline(true);
         GridPane.setConstraints(manageLists,0,5);
 
-        Button btQuarantine = new Button("Quarantine List");
-        btQuarantine.setOnAction(e -> {
+        //button to display pending requests
+        Button btPendingRequests = new Button("Requests");
+        btPendingRequests.setOnAction(e -> {
             try {
-//                Quarantine.displayMain(stage);
+                RequestView.displayPendingRequests(stage, user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btQuarantine,0,6);
+        GridPane.setConstraints(btPendingRequests,0,6);
 
-
-        Button btHospital = new Button("Hospital List");
-        btHospital.setOnAction(e -> {
+        //button to display uncontacted residents who missed meals
+        Button btUncontacted = new Button("Uncontacted Residents");
+        btUncontacted.setOnAction(e -> {
             try {
-//                HospitalList.displayMain(stage);
+                MissedMealView.displayUncontacted(stage, user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
         //sets the layout together
-        GridPane.setConstraints(btHospital,1,6);
+        GridPane.setConstraints(btUncontacted,1,6);
+
+        //button to display residents in quarantine
+        Button btQuarantines = new Button("Quarantines");
+        btQuarantines.setOnAction(e -> {
+            try {
+                QuarantineView.displayInProgress(stage, user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btQuarantines,2,6);
 
 
 
@@ -157,8 +176,8 @@ public class AdminMenuView {
         GridPane.setConstraints(btLogout,0,12);
 
         adminMenu.getChildren().addAll(username,department,btSearch,adminFunctions,btManageUsers,btManageResidents,
-                create,btCreateRequest,btCreateQuarantine,
-                manageLists,btQuarantine,btRequests,markFunctions,btMeals,btHospital,btLogout
+                create,btCreateRequest,btCreateQuarantine, btCreateMeal,
+                manageLists,btPendingRequests,btRequests,markFunctions,btMeals,btUncontacted, btQuarantines,btLogout
         );
 
         //casts the window with the scene in it

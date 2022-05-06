@@ -1,19 +1,20 @@
 package CUS1166Project.Models;
 
 public class Request {
-    int ID;
+    int id;
     String type;
-    int residentID;
+    int resId;
     String dateCreated;
     String description;
     String dateCompleted;
-    int completedBy;
+    String completedBy;
 
     //constructor with all parameters
-    public Request(int id, String type, int residentID, String dateCreated, String description, String dateCompleted, int completedBy) {
-        this.ID = id;
+    public Request(int id, String type, int resId, String dateCreated, String description,
+                   String dateCompleted, String completedBy) {
+        this.id = id;
         this.type = type;
-        this.residentID = residentID;
+        this.resId = resId;
         this.dateCreated = dateCreated;
         this.description = description;
         this.dateCompleted = dateCompleted;
@@ -21,24 +22,24 @@ public class Request {
     }
 
     //constructor with only parameters necessary for creating a new request
-    public Request(int id, String type, int residentID, String dateCreated, String description) {
-        this.ID = id;
+    public Request(int id, String type, int resId, String dateCreated, String description) {
+        this.id = id;
         this.type = type;
-        this.residentID = residentID;
+        this.resId = resId;
         this.dateCreated = dateCreated;
         this.description = description;
     }
 
-    public int getID() {
-        return this.ID;
+    public int getId() {
+        return id;
     }
 
     public String getType() {
         return type;
     }
 
-    public int getResidentID() {
-        return residentID;
+    public int getResId() {
+        return resId;
     }
 
     public String getDateCreated() {
@@ -53,7 +54,9 @@ public class Request {
         return dateCompleted;
     }
 
-    public int completedBy() {
+    public String getCompletedBy() { return completedBy; }
+
+    public String completedBy() {
         return completedBy;
     }
 

@@ -9,8 +9,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.io.FileOutputStream;
 import java.sql.ResultSet;
 
 public class RequestController {
@@ -19,10 +17,10 @@ public class RequestController {
     //method to check if request exists
     public static boolean exists(int id) throws Exception {
         String result = null;
-        ResultSet rs = con.st.executeQuery("SELECT requestID FROM requests WHERE requestID = " + id + ";");
+        ResultSet rs = con.st.executeQuery("SELECT id FROM requests WHERE id = " + id + ";");
 
         while (rs.next()) {
-            result = rs.getString("requestID");
+            result = rs.getString("id");
         }
 
         System.out.println(result);
@@ -32,12 +30,12 @@ public class RequestController {
     //method to get the next id for creating a new request
     public static int getNewID() throws Exception {
         int result = 0;
-        ResultSet rs = con.st.executeQuery("SELECT requestID FROM requests WHERE requestID = " +
-                "(SELECT MAX(requestID) FROM requests);"
+        ResultSet rs = con.st.executeQuery("SELECT id FROM requests WHERE id = " +
+                "(SELECT MAX(id) FROM requests);"
         );
 
         while (rs.next()) {
-            result = Integer.parseInt(rs.getString("requestID"));
+            result = Integer.parseInt(rs.getString("id"));
         }
 
         return result + 1;
@@ -45,8 +43,8 @@ public class RequestController {
 
     //method to create a new request
     public static void createRequest(Request model) throws Exception {
-        con.st.executeUpdate("INSERT INTO requests (requestID, requestType, residentID, dateCreated, description) VALUES ("
-            + model.getID() + ", '" + model.getType() + "', " + model.getResidentID() + ", '" + model.getDateCreated() +
+        con.st.executeUpdate("INSERT INTO requests (id, type, resId, dateCreated, description) VALUES ("
+            + model.getId() + ", '" + model.getType() + "', " + model.getResId() + ", '" + model.getDateCreated() +
                 "', '" + model.getDescription() + "');"
         );
 
@@ -59,10 +57,10 @@ public class RequestController {
     }
 
     //method to mark a request as completed
-    public static void completeRequest(int id, String date, int employeeID) throws Exception {
+    public static void completeRequest(int id, String date, String username) throws Exception {
         if (exists(id)) {
-            con.st.executeUpdate("UPDATE requests SET dateCompleted = '" + date + "', completedBy = " + employeeID +
-                    " WHERE requestID = " + id + ";"
+            con.st.executeUpdate("UPDATE requests SET dateCompleted = '" + date + "', completedBy = '" + username +
+                    "' WHERE id = " + id + ";"
             );
 
             Alert alertRequestComplete = new Alert(
@@ -86,14 +84,14 @@ public class RequestController {
         ObservableList<Request> requests = FXCollections.observableArrayList();
         TableView tableView = new TableView();
 
-        TableColumn<Request, Integer> ID = new TableColumn<>("Request ID");
-        ID.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        TableColumn<Request, Integer> id = new TableColumn<>("Request ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Request, String> type = new TableColumn<>("Request Type");
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-        TableColumn<Request, Integer> residentID = new TableColumn<>("Resident ID");
-        residentID.setCellValueFactory(new PropertyValueFactory<>("residentID"));
+        TableColumn<Request, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
 
         TableColumn<Request, String> dateCreated = new TableColumn<>("Date Created");
         dateCreated.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
@@ -101,23 +99,22 @@ public class RequestController {
         TableColumn<Request, String> description = new TableColumn<>("Description");
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
 
-        tableView.getColumns().add(ID);
+        tableView.getColumns().add(id);
         tableView.getColumns().add(type);
-        tableView.getColumns().add(residentID);
+        tableView.getColumns().add(resId);
         tableView.getColumns().add(dateCreated);
         tableView.getColumns().add(description);
 
         ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE dateCompleted IS NULL AND completedBy IS NULL;");
 
         while(rs.next()) {
-            int rsID = rs.getInt("requestID");
-            String rsRequestType = rs.getString("requestType");
-            int rsResidentID = rs.getInt("residentID");
-            String rsDateCreated = rs.getString("dateCreated");
-            String rsDescription = rs.getString("description");
+            int rId = rs.getInt("id");
+            String rType = rs.getString("type");
+            int rResId = rs.getInt("resId");
+            String rDateCreated = rs.getString("dateCreated");
+            String rDescription = rs.getString("description");
 
-            Request request = new Request(rsID, rsRequestType, rsResidentID, rsDateCreated, rsDescription);
-            requests.add(request);
+            requests.add(new Request(rId, rType, rResId, rDateCreated, rDescription));
         }
 
         tableView.setItems(requests);
@@ -129,14 +126,14 @@ public class RequestController {
         ObservableList<Request> requests = FXCollections.observableArrayList();
         TableView tableView = new TableView();
 
-        TableColumn<Request, Integer> ID = new TableColumn<>("Request ID");
-        ID.setCellValueFactory(new PropertyValueFactory<>("ID"));
+        TableColumn<Request, Integer> id = new TableColumn<>("Request ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
 
         TableColumn<Request, String> type = new TableColumn<>("Request Type");
         type.setCellValueFactory(new PropertyValueFactory<>("type"));
 
-        TableColumn<Request, Integer> residentID = new TableColumn<>("Resident ID");
-        residentID.setCellValueFactory(new PropertyValueFactory<>("residentID"));
+        TableColumn<Request, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
 
         TableColumn<Request, String> dateCreated = new TableColumn<>("Date Created");
         dateCreated.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
@@ -145,29 +142,29 @@ public class RequestController {
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
 
         TableColumn<Request, String> dateCompleted = new TableColumn<>("Date Completed");
-        description.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
+        dateCompleted.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
 
         TableColumn<Request, String> completedBy = new TableColumn<>("Completed By");
-        description.setCellValueFactory(new PropertyValueFactory<>("completedBy"));
+        completedBy.setCellValueFactory(new PropertyValueFactory<>("completedBy"));
 
-        tableView.getColumns().add(ID);
+        tableView.getColumns().add(id);
         tableView.getColumns().add(type);
-        tableView.getColumns().add(residentID);
+        tableView.getColumns().add(resId);
         tableView.getColumns().add(dateCreated);
         tableView.getColumns().add(description);
         tableView.getColumns().add(dateCompleted);
         tableView.getColumns().add(completedBy);
 
-        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE requestType = 'Nurse' AND completedBy is not null;");
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'nurse' AND completedBy IS NOT NULL;");
 
         while(rs.next()) {
-            int rsID = rs.getInt("requestID");
-            String rsRequestType = rs.getString("requestType");
-            int rsResidentID = rs.getInt("residentID");
+            int rsID = rs.getInt("id");
+            String rsRequestType = rs.getString("type");
+            int rsResidentID = rs.getInt("resId");
             String rsDateCreated = rs.getString("dateCreated");
             String rsDescription = rs.getString("description");
             String rsDateCompleted = rs.getString("dateCompleted");
-            int rsCompletedBy = rs.getInt("completedBy");
+            String rsCompletedBy = rs.getString("completedBy");
 
             Request request = new Request(rsID, rsRequestType, rsResidentID, rsDateCreated, rsDescription, rsDateCompleted, rsCompletedBy);
             requests.add(request);

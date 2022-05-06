@@ -10,10 +10,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class RequestView {
 
@@ -52,13 +49,6 @@ public class RequestView {
             }
         });
         GridPane.setConstraints(btPendingRequests,0,2);
-
-        //CREATE PENDING MAINTENANCE REQUEST
-//        Button btPendingMaintenance = new Button("Pending Maintenance Request");
-//        btPendingMaintenance.setOnAction(e -> {
-//            //include pending nurse request function
-//        });
-//        GridPane.setConstraints(btPendingMaintenance,0,3);
 
         //GENERATE NURSE LOGS
         Button btGenNurse = new Button("Generate Nurse Logs");
@@ -136,17 +126,11 @@ public class RequestView {
         GridPane.setConstraints(tfResidentID,1,1);
 
         // DATE CREATED //
-//        String formattedDate = dateFormat.format(currentDate);
         Label date = new Label("Date Created: ");
         DatePicker dpDate = new DatePicker();
         dpDate.setValue(LocalDate.now());
         GridPane.setConstraints(date,0,3);
         GridPane.setConstraints(dpDate,1,3);
-//        TextField tfDate = new TextField();
-//        tfDate.setText(formattedDate);
-//        tfDate.setEditable(false);
-//        GridPane.setConstraints(date,0,3);
-//        GridPane.setConstraints(tfDate,1,3);
 
         // DESCRIPTION //
         Label description = new Label("Description: ");
@@ -177,6 +161,10 @@ public class RequestView {
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
+            cbType.setValue(null);
+            tfResidentID.clear();
+            taDescription.clear();
+            dpDate.setValue(LocalDate.now());
         });
         GridPane.setConstraints(btCreate,1,5);
 
@@ -213,11 +201,11 @@ public class RequestView {
         GridPane.setConstraints(dpDate,1,1);
 
         //label and textfield for employee who completed
-        Label employeeID = new Label("Employee ID: ");
-        TextField tfEmployeeID = new TextField();
-        tfEmployeeID.setPromptText("employee id");
-        GridPane.setConstraints(employeeID,0,2);
-        GridPane.setConstraints(tfEmployeeID,1,2);
+        Label completedBy = new Label("Completed By: ");
+        TextField tfCompletedBy = new TextField();
+        tfCompletedBy.setPromptText("username");
+        GridPane.setConstraints(completedBy,0,2);
+        GridPane.setConstraints(tfCompletedBy,1,2);
 
         //button to go back to previous menu
         Button btBack = new Button("Back");
@@ -232,18 +220,18 @@ public class RequestView {
             try {
                 int reqID = Integer.parseInt(tfRequestID.getText());
                 String dateFinished = dpDate.getValue().toString();
-                int empID = Integer.parseInt(tfEmployeeID.getText());
-                RequestController.completeRequest(reqID, dateFinished, empID);
+                String username = tfCompletedBy.getText();
+                RequestController.completeRequest(reqID, dateFinished, username);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
             tfRequestID.clear();
-            tfEmployeeID.clear();
+            tfCompletedBy.clear();
             dpDate.setValue(null);
         });
         GridPane.setConstraints(btComplete,1,3);
 
-        grid.getChildren().addAll(requestID,tfRequestID,date,dpDate,employeeID,tfEmployeeID,btBack,btComplete);
+        grid.getChildren().addAll(requestID,tfRequestID,date,dpDate,completedBy,tfCompletedBy,btBack,btComplete);
 
         Scene scene = new Scene(grid,300,200);
         stage.setScene(scene);

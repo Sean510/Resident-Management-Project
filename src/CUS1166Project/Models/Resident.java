@@ -16,6 +16,10 @@ public class Resident {
         this.eContact = eContact;
     }
 
+    public Resident(int id) {
+        this.id = id;
+    }
+
     public int getID() {
         return id;
     }
