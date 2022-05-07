@@ -2,6 +2,7 @@ package CUS1166Project.Controllers;
 
 import CUS1166Project.Models.MissedMeal;
 import CUS1166Project.Models.Request;
+import CUS1166Project.Models.Resident;
 import CUS1166Project.Utilities.Connect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -88,5 +89,10 @@ public class MissedMealController {
         tableView.setItems(meals);
 
         return tableView;
+    }
+
+    //function to mark a resident who missed a meal as contacted
+    public static void markContacted(Resident resident) throws Exception {
+        
     }
 }

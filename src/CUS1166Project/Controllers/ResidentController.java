@@ -1,9 +1,15 @@
 package CUS1166Project.Controllers;
 
+import CUS1166Project.Models.Request;
 import CUS1166Project.Models.Resident;
 import CUS1166Project.Utilities.Connect;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.ResultSet;
 
@@ -130,5 +136,54 @@ public class ResidentController {
                 ButtonType.OK
         );
         alertResidentUpdated.show();
+    }
+
+    //function to generate log of residents
+    public static TableView generateResidents() throws Exception {
+        ObservableList<Resident> residents = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<Resident, Integer> id = new TableColumn<>("ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Resident, String> fName = new TableColumn<>("First Name");
+        fName.setCellValueFactory(new PropertyValueFactory<>("fName"));
+
+        TableColumn<Resident, String> lName = new TableColumn<>("Last Name");
+        lName.setCellValueFactory(new PropertyValueFactory<>("lName"));
+
+        TableColumn<Resident, String> unit = new TableColumn<>("Unit");
+        unit.setCellValueFactory(new PropertyValueFactory<>("unit"));
+
+        TableColumn<Resident, String> eContact = new TableColumn<>("Emergency Contact");
+        eContact.setCellValueFactory(new PropertyValueFactory<>("eContact"));
+
+        TableColumn<Resident, String> username = new TableColumn<>("Username");
+        username.setCellValueFactory(new PropertyValueFactory<>("username"));
+
+        tableView.getColumns().add(id);
+        tableView.getColumns().add(fName);
+        tableView.getColumns().add(lName);
+        tableView.getColumns().add(unit);
+        tableView.getColumns().add(eContact);
+        tableView.getColumns().add(username);
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM residents;");
+
+        while(rs.next()) {
+            int rId = rs.getInt("id");
+            String rFName = rs.getString("fName");
+            String rLName = rs.getString("lName");
+            String rUnit = rs.getString("unit");
+            String rEContact = rs.getString("eContact");
+            String rUsername = rs.getString("username");
+
+            Resident resident = new Resident(rId,rFName,rLName,rUnit,rEContact,rUsername);
+            residents.add(resident);
+        }
+
+        tableView.setItems(residents);
+
+        return tableView;
     }
 }

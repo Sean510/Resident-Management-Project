@@ -122,6 +122,7 @@ public class RequestController {
         return tableView;
     }
 
+    //function to generate logs of completed nurse requests
     public static TableView generateNurseLogs() throws Exception {
         ObservableList<Request> requests = FXCollections.observableArrayList();
         TableView tableView = new TableView();
@@ -156,6 +157,60 @@ public class RequestController {
         tableView.getColumns().add(completedBy);
 
         ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'nurse' AND completedBy IS NOT NULL;");
+
+        while(rs.next()) {
+            int rsID = rs.getInt("id");
+            String rsRequestType = rs.getString("type");
+            int rsResidentID = rs.getInt("resId");
+            String rsDateCreated = rs.getString("dateCreated");
+            String rsDescription = rs.getString("description");
+            String rsDateCompleted = rs.getString("dateCompleted");
+            String rsCompletedBy = rs.getString("completedBy");
+
+            Request request = new Request(rsID, rsRequestType, rsResidentID, rsDateCreated, rsDescription, rsDateCompleted, rsCompletedBy);
+            requests.add(request);
+        }
+
+        tableView.setItems(requests);
+
+        return tableView;
+    }
+
+    //function to generate log of completed maintenance requests
+    public static TableView generateMaintenanceLogs() throws Exception {
+        ObservableList<Request> requests = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<Request, Integer> id = new TableColumn<>("Request ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Request, String> type = new TableColumn<>("Request Type");
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Request, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
+
+        TableColumn<Request, String> dateCreated = new TableColumn<>("Date Created");
+        dateCreated.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
+
+        TableColumn<Request, String> description = new TableColumn<>("Description");
+        description.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<Request, String> dateCompleted = new TableColumn<>("Date Completed");
+        dateCompleted.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
+
+        TableColumn<Request, String> completedBy = new TableColumn<>("Completed By");
+        completedBy.setCellValueFactory(new PropertyValueFactory<>("completedBy"));
+
+        tableView.getColumns().add(id);
+        tableView.getColumns().add(type);
+        tableView.getColumns().add(resId);
+        tableView.getColumns().add(dateCreated);
+        tableView.getColumns().add(description);
+        tableView.getColumns().add(dateCompleted);
+        tableView.getColumns().add(completedBy);
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'maintenance' AND completedBy IS NOT NULL;");
 
         while(rs.next()) {
             int rsID = rs.getInt("id");

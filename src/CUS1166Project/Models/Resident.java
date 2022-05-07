@@ -8,6 +8,15 @@ public class Resident {
     String eContact;
     String username;
 
+    public Resident(int id, String fName, String lName, String unit, String eContact, String username) {
+        this.id = id;
+        this.fName = fName;
+        this.lName = lName;
+        this.unit = unit;
+        this.eContact = eContact;
+        this.username = username;
+    }
+
     public Resident(int id, String fName, String lName, String unit, String eContact) {
         this.id = id;
         this.fName = fName;
