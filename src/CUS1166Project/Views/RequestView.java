@@ -1,6 +1,7 @@
 package CUS1166Project.Views;
 
 import CUS1166Project.Controllers.RequestController;
+import CUS1166Project.Controllers.UserController;
 import CUS1166Project.Models.Request;
 import CUS1166Project.Models.User;
 import javafx.collections.ObservableList;
@@ -144,7 +145,11 @@ public class RequestView {
         //button to go to the previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e ->{
-            displayMenu(stage, user);
+            try {
+                AdminMenuView.display(stage,user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
         GridPane.setConstraints(btBack,0,5);
 
@@ -256,7 +261,11 @@ public class RequestView {
         //button to go back to previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
-            displayMenu(stage, user);
+            try {
+                AdminMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
         GridPane.setConstraints(btBack,0,3);
 
@@ -338,7 +347,11 @@ public class RequestView {
         //button to go back to previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
-            displayMenu(stage, user);
+            try {
+                AdminMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
         GridPane.setConstraints(btBack,0,3);
 
@@ -353,6 +366,117 @@ public class RequestView {
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
         Scene scene = new Scene(vBox,625,400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    //function to display create request for residents
+    public static void displayCreateRequestResident(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+
+        // REQUEST TYPE //
+        Label type = new Label("Request Type: ");
+        ChoiceBox<String> cbType = new ChoiceBox<>();
+        cbType.getItems().add("Nurse");
+        cbType.getItems().add("Maintenance");
+        cbType.setValue("Select One");
+        GridPane.setConstraints(type,0,0);
+        GridPane.setConstraints(cbType,1,0);
+
+        // DATE CREATED //
+        Label date = new Label("Date Created: ");
+        DatePicker dpDate = new DatePicker();
+        dpDate.setValue(LocalDate.now());
+        GridPane.setConstraints(date,0,2);
+        GridPane.setConstraints(dpDate,1,2);
+
+        // DESCRIPTION //
+        Label description = new Label("Description: ");
+        TextArea taDescription = new TextArea();
+        taDescription.setPrefHeight(100);
+        taDescription.setPrefWidth(200);
+        GridPane.setConstraints(description,0,3);
+        GridPane.setConstraints(taDescription,1,3);
+
+        //button to go to the previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e ->{
+            try {
+                ResidentMenuView.display(stage,user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btBack,0,4);
+
+        //button to create request
+        Button btCreate = new Button("Create Request");
+        btCreate.setOnAction(e ->{
+            try {
+                int newID = RequestController.getNewID();
+                String newType = cbType.getValue();
+                int newResidentID = UserController.getResidentId(user);
+                String newDescription = taDescription.getText();
+                String newDate = dpDate.getValue().toString();
+                Request request = new Request(newID, newType, newResidentID, newDate, newDescription);
+                RequestController.createRequest(request);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            cbType.setValue(null);
+//            tfResidentID.clear();
+            taDescription.clear();
+            dpDate.setValue(LocalDate.now());
+        });
+        GridPane.setConstraints(btCreate,1,4);
+
+
+        grid.getChildren().addAll(type,cbType,
+//                residentID,tfResidentID,
+                description,taDescription,date,dpDate,btBack,btCreate);
+
+        Scene scene = new Scene(grid,300,250);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public static void displayPendingRequestsResident(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = RequestController.generatePendingRequestsResident(user);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            try {
+                ResidentMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.setMargin(btBack,new Insets(0,40,0,0));
+        hBox.getChildren().addAll(btBack);
+
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,425,400);
         stage.setScene(scene);
         stage.show();
     }

@@ -1,6 +1,7 @@
 package CUS1166Project.Controllers;
 
 import CUS1166Project.Models.Request;
+import CUS1166Project.Models.User;
 import CUS1166Project.Utilities.Connect;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -286,6 +287,52 @@ public class RequestController {
 
             Request request = new Request(rsID, rsRequestType, rsResidentID, rsDateCreated, rsDescription, rsDateCompleted, rsCompletedBy);
             requests.add(request);
+        }
+
+        tableView.setItems(requests);
+
+        return tableView;
+    }
+
+    //method returns a tableview of pending requests for a specific user
+    public static TableView generatePendingRequestsResident(User user) throws Exception {
+        int residentId = UserController.getResidentId(user);
+
+        ObservableList<Request> requests = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<Request, Integer> id = new TableColumn<>("Request ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Request, String> type = new TableColumn<>("Request Type");
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Request, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
+
+        TableColumn<Request, String> dateCreated = new TableColumn<>("Date Created");
+        dateCreated.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
+
+        TableColumn<Request, String> description = new TableColumn<>("Description");
+        description.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        tableView.getColumns().add(id);
+        tableView.getColumns().add(type);
+        tableView.getColumns().add(resId);
+        tableView.getColumns().add(dateCreated);
+        tableView.getColumns().add(description);
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE dateCompleted IS NULL AND completedBy IS NULL" +
+                " AND resId = " + residentId + ";");
+
+        while(rs.next()) {
+            int rId = rs.getInt("id");
+            String rType = rs.getString("type");
+            int rResId = rs.getInt("resId");
+            String rDateCreated = rs.getString("dateCreated");
+            String rDescription = rs.getString("description");
+
+            requests.add(new Request(rId, rType, rResId, rDateCreated, rDescription));
         }
 
         tableView.setItems(requests);

@@ -172,4 +172,16 @@ public class UserController {
 
         return tableView;
     }
+
+    //function to get resident id from user info
+    public static int getResidentId(User user) throws Exception {
+        int result = 0;
+        ResultSet rs = con.st.executeQuery("SELECT id FROM residents WHERE username = '" + user.getUsername() + "';");
+
+        while(rs.next()) {
+            result = rs.getInt("id");
+        }
+
+        return result;
+    }
 }

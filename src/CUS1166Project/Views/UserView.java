@@ -111,7 +111,6 @@ public class UserView {
 
         //usernamename input
         TextField tfUsername = new TextField();
-        tfUsername.setPromptText("username"); // grayed out text prompting users to enter their first name
         GridPane.setConstraints(tfUsername,1,0);
 
         //Password label
@@ -120,7 +119,6 @@ public class UserView {
 
         //Password input
         PasswordField tfPassword = new PasswordField();
-        tfPassword.setPromptText("password");
         GridPane.setConstraints(tfPassword,1,1);
 
         //User type label
@@ -183,7 +181,6 @@ public class UserView {
 
         //username input
         TextField tfUsername = new TextField();
-        tfUsername.setPromptText("username");
         GridPane.setConstraints(tfUsername, 1, 0);
 
         //password label
@@ -192,7 +189,6 @@ public class UserView {
 
         //password textfield
         PasswordField tfPassword = new PasswordField();
-        tfPassword.setPromptText("password");
         GridPane.setConstraints(tfPassword, 1, 1);
 
 
@@ -249,7 +245,6 @@ public class UserView {
 
         //First name input
         TextField tfUsername = new TextField();
-        tfUsername.setPromptText("username");
         GridPane.setConstraints(tfUsername,1,0);
 
         //label for old password
@@ -258,7 +253,6 @@ public class UserView {
 
         //textfield for old password
         PasswordField tfOldPassword = new PasswordField();
-        tfOldPassword.setPromptText("old password");
         GridPane.setConstraints(tfOldPassword,1,1);
 
         //label for new password
@@ -267,7 +261,6 @@ public class UserView {
 
         //textfield for new password
         PasswordField tfNewPassword = new PasswordField();
-        tfNewPassword.setPromptText("new password");
         GridPane.setConstraints(tfNewPassword,1,2);
 
 
@@ -320,7 +313,11 @@ public class UserView {
         //button to go back to previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
-            displayMenu(stage, user);
+            try {
+                AdminMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
         GridPane.setConstraints(btBack,0,3);
 

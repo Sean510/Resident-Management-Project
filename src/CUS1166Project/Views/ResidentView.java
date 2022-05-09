@@ -294,7 +294,15 @@ public class ResidentView {
 
         Button btBack = new Button("Back");
         btBack.setOnAction(e ->{
-            displayUpdateResident(stage, user);
+            if (user.getType().equals("admin")) {
+                displayUpdateResident(stage, user);
+            } else {
+                try {
+                    ResidentMenuView.display(stage,user);
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
         });
         GridPane.setConstraints(btBack,0,5);
 
@@ -308,7 +316,11 @@ public class ResidentView {
                 String newContact = tfEContact.getText();
                 Resident newResident = new Resident(newID, newFName, newLName, newUnit, newContact);
                 ResidentController.updateResident(newResident);
-                displayUpdateResident(stage, user);
+                if(user.getType().equals("admin")) {
+                    displayUpdateResident(stage, user);
+                } else {
+                    displayUpdateResidentDetails(stage,user,ResidentController.getResidentDetails(resident.getId()));
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -336,7 +348,11 @@ public class ResidentView {
         //button to go back to previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
-            displayMenu(stage, user);
+            try {
+                AdminMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
         GridPane.setConstraints(btBack,0,3);
 
