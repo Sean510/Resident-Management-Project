@@ -4,6 +4,7 @@ import CUS1166Project.Controllers.MissedMealController;
 import CUS1166Project.Controllers.RequestController;
 import CUS1166Project.Models.MissedMeal;
 import CUS1166Project.Models.User;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,13 +23,6 @@ public class MissedMealView {
         grid.setPadding(new Insets(10,10,10,10));
         grid.setVgap(8);
         grid.setHgap(10);
-
-//        Label id = new Label("Request ID: ");
-//        TextField idInput = new TextField();
-//        idInput.setText("");
-//        idInput.setEditable(false);
-//        GridPane.setConstraints(id,0,0);
-//        GridPane.setConstraints(idInput,1,0);
 
         Label resId = new Label("Resident ID: ");
         TextField tfResId = new TextField();
@@ -78,7 +72,7 @@ public class MissedMealView {
             }
             tfResId.clear();
             cbMealMissed.setValue("Select One");
-            dpDateMissed.setValue(null);
+            dpDateMissed.setValue(LocalDate.now());
         });
         GridPane.setConstraints(btAdd,1,4);
 
@@ -120,10 +114,30 @@ public class MissedMealView {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10,10,10,10));
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(btBack);
+//        hBox.getChildren().addAll(btBack);
 
         //creates tableview and populates it with data from database
         TableView tableView = MissedMealController.generateUncontacted();
+
+        //button to mark contacted
+        Button btMarkContacted = new Button("Mark Contacted");
+        btMarkContacted.setOnAction(i -> {
+            try {
+                ObservableList<MissedMeal> selected = tableView.getSelectionModel().getSelectedItems();
+                int resId = selected.get(0).getResId();
+                String mealMissed = selected.get(0).getMealMissed();
+                String dateMissed = selected.get(0).getDateMissed();
+                MissedMeal meal = new MissedMeal(resId,mealMissed,dateMissed);
+                MissedMealController.markContacted(meal);
+                displayUncontacted(stage, user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btMarkContacted,0,4);
+
+        hBox.getChildren().addAll(btBack,btMarkContacted);
+
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
         Scene scene = new Scene(vBox);

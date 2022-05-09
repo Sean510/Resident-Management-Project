@@ -1,9 +1,15 @@
 package CUS1166Project.Controllers;
 
+import CUS1166Project.Models.Request;
 import CUS1166Project.Utilities.Connect;
 import CUS1166Project.Models.User;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.ResultSet;
 
@@ -131,5 +137,39 @@ public class UserController {
                 ButtonType.OK
         );
         alert.show();
+    }
+
+    //function to generate log of users
+    public static TableView generateUsers() throws Exception {
+        ObservableList<User> users = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<User, String> username = new TableColumn<>("Username");
+        username.setCellValueFactory(new PropertyValueFactory<>("username"));
+
+        TableColumn<User, String> password = new TableColumn<>("Password");
+        password.setCellValueFactory(new PropertyValueFactory<>("password"));
+
+        TableColumn<User, String> type = new TableColumn<>("Type");
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        tableView.getColumns().add(username);
+        tableView.getColumns().add(password);
+        tableView.getColumns().add(type);
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM users;");
+
+        while(rs.next()) {
+            String uUsername = rs.getString("username");
+            String uPassword = rs.getString("password");
+            String uType = rs.getString("type");
+
+            User user = new User(uUsername,uPassword,uType);
+            users.add(user);
+        }
+
+        tableView.setItems(users);
+
+        return tableView;
     }
 }

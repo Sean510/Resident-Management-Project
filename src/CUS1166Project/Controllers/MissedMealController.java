@@ -92,7 +92,16 @@ public class MissedMealController {
     }
 
     //function to mark a resident who missed a meal as contacted
-    public static void markContacted(Resident resident) throws Exception {
-        
+    public static void markContacted(MissedMeal meal) throws Exception {
+        con.st.executeUpdate("UPDATE missedmeals SET contacted = 'yes' WHERE resId = " + meal.getResId() +
+                " and mealMissed = '" + meal.getMealMissed() + "' and dateMissed = '" + meal.getDateMissed() + "';"
+        );
+
+        Alert alertContacted = new Alert(
+                Alert.AlertType.NONE,
+                "Successfuly marked resident as contacted!",
+                ButtonType.OK
+        );
+        alertContacted.show();
     }
 }
