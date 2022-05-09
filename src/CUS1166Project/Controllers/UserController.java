@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 public class UserController {
     static Connect con = new Connect();
 
+
     //function to check if the user exists in the database
     public static boolean userExists (User model) throws Exception {
         String result = null;

@@ -47,6 +47,12 @@ public class ResidentView {
         });
         GridPane.setConstraints(btUpdateResident,0,2);
 
+        Button btCreateAccount = new Button("Create User Account");
+        btCreateAccount.setOnAction(e -> {
+            displayCreateUserAccount(stage,user);
+        });
+        GridPane.setConstraints(btCreateAccount,0,3);
+
         Button btMainMenu = new Button("Main Menu");
         btMainMenu.setOnAction(e -> {
             try {
@@ -67,9 +73,9 @@ public class ResidentView {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btMainMenu,0,3);
+        GridPane.setConstraints(btMainMenu,0,5);
 
-        grid.getChildren().addAll(btAddResident, btDeleteResident, btUpdateResident, btMainMenu);
+        grid.getChildren().addAll(btAddResident, btDeleteResident, btUpdateResident, btCreateAccount, btMainMenu);
 
         Scene scene = new Scene(grid,300,200);
         stage.setScene(scene);
@@ -367,6 +373,79 @@ public class ResidentView {
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
         Scene scene = new Scene(vBox,430,400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    //function to display menu to create user account for a resident
+    public static void displayCreateUserAccount(Stage stage, User user) {
+        stage.setTitle("Sr. Housing");
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //label and textfield for resident id
+        Label id = new Label("Resident ID: ");
+        TextField tfId = new TextField();
+        GridPane.setConstraints(id,0,0);
+        GridPane.setConstraints(tfId,1,0);
+
+        //label and textfield for username
+        Label username = new Label("Username");
+        TextField tfUsername = new TextField();
+        GridPane.setConstraints(username,0,1);
+        GridPane.setConstraints(tfUsername,1,1);
+
+        //label and textfield for password
+        Label password = new Label("Password");
+        PasswordField pfPassword = new PasswordField();
+        GridPane.setConstraints(password,0,2);
+        GridPane.setConstraints(pfPassword,1,2);
+
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            displayMenu(stage,user);
+        });
+        GridPane.setConstraints(btBack,0,4);
+
+        Button btCreate = new Button("Create User Account");
+        btCreate.setOnAction(e -> {
+            if(tfId.getText().equals("") || tfUsername.getText().equals("") || pfPassword.getText().equals("")) {
+                Alert alertInvalid = new Alert(
+                        Alert.AlertType.NONE,
+                        "Please make sure all inputs are valid.",
+                        ButtonType.OK
+                );
+                alertInvalid.show();
+            } else {
+                int userId = Integer.parseInt(tfId.getText());
+                String userUsername = tfUsername.getText();
+                String userPassword = pfPassword.getText();
+                try {
+                    if (ResidentController.hasUsername(userId)) {
+                        Alert alertAlreadyUser = new Alert(
+                                Alert.AlertType.NONE,
+                                "This resident already has a user account.",
+                                ButtonType.OK
+                        );
+                        alertAlreadyUser.show();
+                    } else {
+                        ResidentController.createAccount(userId,userUsername,userPassword);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            tfId.clear();
+            tfUsername.clear();
+            pfPassword.clear();
+        });
+        GridPane.setConstraints(btCreate,1,4);
+
+        grid.getChildren().addAll(id,tfId,username,tfUsername,password,pfPassword,btBack,btCreate);
+
+        Scene scene = new Scene(grid,300,175);
         stage.setScene(scene);
         stage.show();
     }

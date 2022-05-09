@@ -2,7 +2,9 @@ package CUS1166Project.Controllers;
 
 import CUS1166Project.Models.Request;
 import CUS1166Project.Models.Resident;
+import CUS1166Project.Models.User;
 import CUS1166Project.Utilities.Connect;
+import CUS1166Project.Utilities.Encryptor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -54,6 +56,19 @@ public class ResidentController {
 
         while (rs.next()) {
             result = rs.getString("id");
+        }
+
+        return result != null;
+    }
+
+    //function to check if a resident has a username
+    public static boolean hasUsername(int id) throws Exception {
+        String result = null;
+
+        ResultSet rs = con.st.executeQuery("SELECT username FROM residents WHERE id = " + id + ";");
+
+        while (rs.next()) {
+            result = rs.getString("username");
         }
 
         return result != null;
@@ -185,5 +200,22 @@ public class ResidentController {
         tableView.setItems(residents);
 
         return tableView;
+    }
+
+    //function to create user account for a resident
+    public static void createAccount(int id, String username, String password) throws Exception {
+        //User user = new User(username,password,"resident");
+        con.st.executeUpdate("Insert INTO users VALUES ('" + username + "', '" + Encryptor.encryptString(password) +
+                "', 'resident');"
+        );
+
+        con.st.executeUpdate("UPDATE residents SET username = '" + username + "' WHERE id = " + id + ";");
+
+        Alert alertSuccess = new Alert(
+                Alert.AlertType.NONE,
+                "User account successfully created!",
+                ButtonType.OK
+        );
+        alertSuccess.show();
     }
 }
