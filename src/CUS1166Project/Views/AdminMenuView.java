@@ -1,18 +1,12 @@
 package CUS1166Project.Views;
 
-import CUS1166Project.Controllers.QuarantineController;
-import CUS1166Project.Models.MissedMeal;
 import CUS1166Project.Models.User;
-import javafx.css.Style;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import java.util.Objects;
 
 public class AdminMenuView {
 
@@ -25,8 +19,6 @@ public class AdminMenuView {
 
         Label username = new Label("Welcome, " + user.getUsername() + "!");
         GridPane.setConstraints(username,0,0);
-//        Label department = new Label("Department: Administration");
-//        GridPane.setConstraints(department,1,0);
 
         Label adminFunctions = new Label("Manage:");
         adminFunctions.setUnderline(true);

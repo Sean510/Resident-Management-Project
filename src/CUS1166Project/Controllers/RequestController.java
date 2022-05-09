@@ -132,6 +132,50 @@ public class RequestController {
         return tableView;
     }
 
+    //method returns a tableview of pending requests maintenance
+    public static TableView generatePendingMaintenanceRequests() throws Exception {
+        ObservableList<Request> requests = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<Request, Integer> id = new TableColumn<>("Request ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Request, String> type = new TableColumn<>("Request Type");
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Request, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
+
+        TableColumn<Request, String> dateCreated = new TableColumn<>("Date Created");
+        dateCreated.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
+
+        TableColumn<Request, String> description = new TableColumn<>("Description");
+        description.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        tableView.getColumns().add(id);
+        tableView.getColumns().add(type);
+        tableView.getColumns().add(resId);
+        tableView.getColumns().add(dateCreated);
+        tableView.getColumns().add(description);
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE dateCompleted IS NULL AND completedBy IS NULL " +
+                "AND type = 'maintenance';");
+
+        while(rs.next()) {
+            int rId = rs.getInt("id");
+            String rType = rs.getString("type");
+            int rResId = rs.getInt("resId");
+            String rDateCreated = rs.getString("dateCreated");
+            String rDescription = rs.getString("description");
+
+            requests.add(new Request(rId, rType, rResId, rDateCreated, rDescription));
+        }
+
+        tableView.setItems(requests);
+
+        return tableView;
+    }
+
     //function to generate logs of nurse requests
     public static TableView generateNurseLogs() throws Exception {
         ObservableList<Request> requests = FXCollections.observableArrayList();

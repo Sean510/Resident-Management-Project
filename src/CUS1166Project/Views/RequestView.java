@@ -244,6 +244,62 @@ public class RequestView {
         stage.show();
     }
 
+    //funciton to display complete a request for maintenance
+    public static void displayCompleteRequestMaintenance(Stage stage, User user) {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //label and textfield for request id
+        Label requestID = new Label("Request ID:");
+        TextField tfRequestID = new TextField();
+        tfRequestID.setPromptText("request id");
+        GridPane.setConstraints(requestID,0,0);
+        GridPane.setConstraints(tfRequestID,1,0);
+
+        //label and datepicker for date completed
+        Label date = new Label("Date Completed: ");
+        DatePicker dpDate = new DatePicker();
+        GridPane.setConstraints(date,0,1);
+        GridPane.setConstraints(dpDate,1,1);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            try {
+                MaintenanceMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //button to complete request
+        Button btComplete = new Button("Complete");
+        btComplete.setOnAction(e -> {
+            try {
+                int reqID = Integer.parseInt(tfRequestID.getText());
+                String dateFinished = dpDate.getValue().toString();
+                String username = user.getUsername();
+                RequestController.completeRequest(reqID, dateFinished, username);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            tfRequestID.clear();
+            dpDate.setValue(null);
+        });
+        GridPane.setConstraints(btComplete,1,3);
+
+        grid.getChildren().addAll(requestID,tfRequestID,date,dpDate,btBack,btComplete);
+
+        Scene scene = new Scene(grid,300,200);
+        stage.setScene(scene);
+        stage.show();
+    }
+
      /******************************
     **  DISPLAYS PENDING REQUESTS  **
      ******************************/
@@ -297,6 +353,43 @@ public class RequestView {
         hBox.setMargin(btBack,new Insets(0,40,0,0));
         hBox.getChildren().addAll(btBack,dpDateCompleted,btCompleteRequest);
 
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,425,400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /*******************************************
+     **  DISPLAYS PENDING MAINTENANCE REQUESTS  **
+     ******************************************/
+    public static void displayPendingMaintenanceRequests(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            try {
+                MaintenanceMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(btBack);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = RequestController.generatePendingMaintenanceRequests();
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
         Scene scene = new Scene(vBox,425,400);
@@ -445,6 +538,7 @@ public class RequestView {
         stage.show();
     }
 
+    //function to display pending maintenance requests
     public static void displayPendingRequestsResident(Stage stage, User user) throws Exception {
         stage.setTitle("SR. Housing");
 
@@ -477,6 +571,43 @@ public class RequestView {
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
         Scene scene = new Scene(vBox,425,400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    //function to display maintenance log
+    public static void displayMaintenanceLog(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = RequestController.generateMaintenanceLogs();
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            try {
+                MaintenanceMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.setMargin(btBack,new Insets(0,40,0,0));
+        hBox.getChildren().addAll(btBack);
+
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,625,400);
         stage.setScene(scene);
         stage.show();
     }

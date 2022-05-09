@@ -10,68 +10,69 @@ import javafx.stage.Stage;
 
 public class MaintenanceMenuView {
 
-    public static void display(Stage stage, User user) {
-        stage.setTitle("SR. Housing");
+    //function to display resident main menu
+    public static void display(Stage stage, User user) throws Exception {
+        GridPane maintenanceMenu = new GridPane();
+        maintenanceMenu.setPadding(new Insets(10,10,10,10));
+        maintenanceMenu.setVgap(8);
+        maintenanceMenu.setHgap(10);
 
-        Label username = new Label("User: " + user.getUsername());
+        Label username = new Label("Welcome, " + user.getUsername() + "!");
         GridPane.setConstraints(username,0,0);
-        Label department = new Label("Department: Maintenance");
-        GridPane.setConstraints(department,1,0);
 
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(10,10,10,10));
-        grid.setVgap(8);
-        grid.setHgap(8);
+        Label requestFunctions = new Label("Requests:");
+        requestFunctions.setUnderline(true);
+        GridPane.setConstraints(requestFunctions,0,1);
 
-        Label markCompleteLabel = new Label("Mark Request Completed:");
-        markCompleteLabel.setUnderline(true);
-        GridPane.setConstraints(markCompleteLabel,0,1);
-
-        //MARK REQUEST COMPLETE
-        Button btComplete = new Button("Mark Request Completed");
-        btComplete.setOnAction(e -> {
-            RequestView.displayCompleteRequest(stage, user);
-        });
-        GridPane.setConstraints(btComplete,0,2);
-
-
-        Label genLogs = new Label("View Logs:");
-        genLogs.setUnderline(true);
-        GridPane.setConstraints(genLogs,0,3);
-
-        //CREATE PENDING MAINTENANCE REQUEST
-        Button btPending = new Button("Pending Maintenance Request");
+        Button btPending = new Button("Pending");
         btPending.setOnAction(e -> {
             try {
-                RequestView.displayPendingRequests(stage, user); //NEED TO CHANGE TO ONLY DISPLAY PENDING MAINTENANCE
-            } catch (Exception exception) {
-                exception.printStackTrace();
+                RequestView.displayPendingMaintenanceRequests(stage, user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btPending,0,4);
+        //sets the layout together
+        GridPane.setConstraints(btPending,0,2);
 
-
-        //GENERATE MAINTENANCE LOGS
-        Button btLogs = new Button("Generate Maintenance Logs");
-        btLogs.setOnAction(e -> {
-            //include generate maintenance function
+        Button btComplete = new Button("Complete");
+        btComplete.setOnAction(e -> {
+            try {
+                RequestView.displayCompleteRequestMaintenance(stage,user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
-        GridPane.setConstraints(btLogs,0,5);
+        //sets the layout together
+        GridPane.setConstraints(btComplete,1,2);
 
+        Button btLog = new Button("Maintenance Log");
+        btLog.setOnAction(e -> {
+            try {
+                RequestView.displayMaintenanceLog(stage,user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btLog,0,3);
 
+        //Logout button
         Button btLogout = new Button("Log Out");
-        btLogout.setOnAction(e ->{
+        btLogout.setOnAction(e -> {
             try {
                 LoginView.display(stage);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        GridPane.setConstraints(btLogout,0,6);
 
-        grid.getChildren().addAll(username,department,markCompleteLabel,genLogs,btPending,btLogs,btComplete,btLogout);
+        //sets the layout together
+        GridPane.setConstraints(btLogout,0,8);
 
-        Scene scene = new Scene(grid,350,250);
+        maintenanceMenu.getChildren().addAll(username,requestFunctions,btPending,btComplete,btLog, btLogout);
+
+        //casts the window with the scene in it
+        Scene scene = new Scene(maintenanceMenu,350,225);
         stage.setScene(scene);
         stage.show();
     }
