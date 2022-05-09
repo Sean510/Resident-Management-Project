@@ -38,7 +38,7 @@ public class MaintenanceMenuView {
         Button btComplete = new Button("Complete");
         btComplete.setOnAction(e -> {
             try {
-                RequestView.displayCompleteRequestMaintenance(stage,user);
+                RequestView.displayCompleteRequestNotAdmin(stage,user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

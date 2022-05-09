@@ -52,7 +52,7 @@ public class LoginView {
                         switch (user.getType().toLowerCase()) {
                             case "admin" -> AdminMenuView.display(stage, user);
                             case "maintenance" -> MaintenanceMenuView.display(stage, user);
-//                            case "nurse" -> NurseMenuView.display(stage, user);
+                            case "nurse" -> NurseMenuView.display(stage, user);
                             case "resident" -> ResidentMenuView.display(stage, user);
                         }
                     } else {
@@ -77,7 +77,7 @@ public class LoginView {
                         switch (user.getType().toLowerCase()) {
                             case "admin" -> AdminMenuView.display(stage, user);
                             case "maintenance" -> MaintenanceMenuView.display(stage, user);
-//                            case "nurse" -> NurseMenuView.display(stage, user);
+                            case "nurse" -> NurseMenuView.display(stage, user);
                             case "resident" -> ResidentMenuView.display(stage, user);
                         }
                     } else {
@@ -102,7 +102,7 @@ public class LoginView {
                     switch (user.getType().toLowerCase()) {
                         case "admin" -> AdminMenuView.display(stage, user);
                         case "maintenance" -> MaintenanceMenuView.display(stage, user);
-//                        case "nurse" -> NurseMenuView.display(stage, user);
+                        case "nurse" -> NurseMenuView.display(stage, user);
                         case "resident" -> ResidentMenuView.display(stage, user);
                     }
                 } else {

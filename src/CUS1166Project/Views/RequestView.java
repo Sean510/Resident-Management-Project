@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class RequestView {
 
@@ -196,20 +197,19 @@ public class RequestView {
         //label and textfield for request id
         Label requestID = new Label("Request ID:");
         TextField tfRequestID = new TextField();
-        tfRequestID.setPromptText("request id");
         GridPane.setConstraints(requestID,0,0);
         GridPane.setConstraints(tfRequestID,1,0);
 
         //label and datepicker for date completed
         Label date = new Label("Date Completed: ");
         DatePicker dpDate = new DatePicker();
+        dpDate.setValue(LocalDate.now());
         GridPane.setConstraints(date,0,1);
         GridPane.setConstraints(dpDate,1,1);
 
         //label and textfield for employee who completed
         Label completedBy = new Label("Completed By: ");
         TextField tfCompletedBy = new TextField();
-        tfCompletedBy.setPromptText("username");
         GridPane.setConstraints(completedBy,0,2);
         GridPane.setConstraints(tfCompletedBy,1,2);
 
@@ -227,13 +227,22 @@ public class RequestView {
                 int reqID = Integer.parseInt(tfRequestID.getText());
                 String dateFinished = dpDate.getValue().toString();
                 String username = tfCompletedBy.getText();
-                RequestController.completeRequest(reqID, dateFinished, username);
+                if (RequestController.exists(reqID)) {
+                    RequestController.completeRequest(reqID, dateFinished, username);
+                } else {
+                    Alert alertNotExist = new Alert(
+                            Alert.AlertType.NONE,
+                            "Please make sure you enter a valid request.",
+                            ButtonType.OK
+                    );
+                    alertNotExist.show();
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
             tfRequestID.clear();
             tfCompletedBy.clear();
-            dpDate.setValue(null);
+            dpDate.setValue(LocalDate.now());
         });
         GridPane.setConstraints(btComplete,1,3);
 
@@ -245,7 +254,7 @@ public class RequestView {
     }
 
     //funciton to display complete a request for maintenance
-    public static void displayCompleteRequestMaintenance(Stage stage, User user) {
+    public static void displayCompleteRequestNotAdmin(Stage stage, User user) {
         stage.setTitle("SR. Housing");
 
         GridPane grid = new GridPane();
@@ -256,13 +265,13 @@ public class RequestView {
         //label and textfield for request id
         Label requestID = new Label("Request ID:");
         TextField tfRequestID = new TextField();
-        tfRequestID.setPromptText("request id");
         GridPane.setConstraints(requestID,0,0);
         GridPane.setConstraints(tfRequestID,1,0);
 
         //label and datepicker for date completed
         Label date = new Label("Date Completed: ");
         DatePicker dpDate = new DatePicker();
+        dpDate.setValue(LocalDate.now());
         GridPane.setConstraints(date,0,1);
         GridPane.setConstraints(dpDate,1,1);
 
@@ -270,7 +279,8 @@ public class RequestView {
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
             try {
-                MaintenanceMenuView.display(stage, user);
+                if (user.getType().equals("maintenance")) { MaintenanceMenuView.display(stage, user); }
+                if (user.getType().equals("nurse")) { NurseMenuView.display(stage, user); }
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -284,12 +294,21 @@ public class RequestView {
                 int reqID = Integer.parseInt(tfRequestID.getText());
                 String dateFinished = dpDate.getValue().toString();
                 String username = user.getUsername();
-                RequestController.completeRequest(reqID, dateFinished, username);
+                if (RequestController.exists(reqID)) {
+                    RequestController.completeRequest(reqID, dateFinished, username);
+                } else {
+                    Alert alertNotExist = new Alert(
+                            Alert.AlertType.NONE,
+                            "Please make sure you enter a valid request.",
+                            ButtonType.OK
+                    );
+                    alertNotExist.show();
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
             tfRequestID.clear();
-            dpDate.setValue(null);
+            dpDate.setValue(LocalDate.now());
         });
         GridPane.setConstraints(btComplete,1,3);
 
@@ -334,12 +353,21 @@ public class RequestView {
         Button btCompleteRequest = new Button("Complete Request");
         btCompleteRequest.setOnAction(e -> {
             try {
-                ObservableList<Request> selected = tableView.getSelectionModel().getSelectedItems();
-                int id = selected.get(0).getId();
-                String dateCompleted = dpDateCompleted.getValue().toString();
-                String completedBy = user.getUsername();
-                RequestController.completeRequest(id,dateCompleted,completedBy);
-                displayPendingRequests(stage,user);
+                if (dpDateCompleted.getValue() == null) {
+                    Alert alertNull = new Alert(
+                            Alert.AlertType.NONE,
+                            "Please make sure to enter a date completed",
+                            ButtonType.OK
+                    );
+                    alertNull.show();
+                } else {
+                    ObservableList<Request> selected = tableView.getSelectionModel().getSelectedItems();
+                    int id = selected.get(0).getId();
+                    String dateCompleted = dpDateCompleted.getValue().toString();
+                    String completedBy = user.getUsername();
+                    RequestController.completeRequest(id,dateCompleted,completedBy);
+                    displayPendingRequests(stage,user);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -397,6 +425,43 @@ public class RequestView {
         stage.show();
     }
 
+    /*******************************************
+     **  DISPLAYS PENDING NURSE REQUESTS       **
+     ******************************************/
+    public static void displayPendingNurseRequests(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            try {
+                NurseMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(btBack);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = RequestController.generatePendingNurseRequests();
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,425,400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     //function to display nurse logs
     public static void displayNurseLogs(Stage stage, User user) throws Exception {
         stage.setTitle("SR. Housing");
@@ -409,7 +474,11 @@ public class RequestView {
         //button to go back to previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
-            displayMenu(stage, user);
+            try {
+                NurseMenuView.display(stage, user);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
         });
         GridPane.setConstraints(btBack,0,3);
 
@@ -423,7 +492,7 @@ public class RequestView {
         TableView tableView = RequestController.generateNurseLogs();
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
-        Scene scene = new Scene(vBox,625,400);
+        Scene scene = new Scene(vBox,650,400);
         stage.setScene(scene);
         stage.show();
     }

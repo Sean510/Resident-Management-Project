@@ -32,19 +32,9 @@ public class AdminMenuView {
                 ex.printStackTrace();
             }
         });
-
         //sets the layout together
         GridPane.setConstraints(btManageUsers,0,2);
 
-        Button btSearch = new Button("Quick Search \uD83D\uDD0D");
-        btSearch.setOnAction(e -> {
-            try {
-//                Project_1.Views.quickSearch.displayMain(stage);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-        GridPane.setConstraints(btSearch,4,0);
 
         Button btManageResidents = new Button("Residents");
         btManageResidents.setOnAction(e -> {
@@ -211,8 +201,7 @@ public class AdminMenuView {
 
         adminMenu.getChildren().addAll(username, adminFunctions,btManageUsers,btManageResidents,
                 create,btCreateRequest,btCreateQuarantine, btCreateMeal,
-                manageLists,btPendingRequests,btUsersLog,
-                btResidentsLog,
+                manageLists,btPendingRequests,btUsersLog, btResidentsLog,
                 btRequestsLog,btQuarantineLogs,btMissedMealLogs,markFunctions,btUncontacted, btQuarantines,btLogout
         );
 

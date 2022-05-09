@@ -2,6 +2,7 @@ package CUS1166Project.Views;
 
 import CUS1166Project.Controllers.MissedMealController;
 import CUS1166Project.Controllers.RequestController;
+import CUS1166Project.Controllers.ResidentController;
 import CUS1166Project.Models.MissedMeal;
 import CUS1166Project.Models.User;
 import javafx.collections.ObservableList;
@@ -26,7 +27,6 @@ public class MissedMealView {
 
         Label resId = new Label("Resident ID: ");
         TextField tfResId = new TextField();
-        tfResId.setPromptText("resident id");
         GridPane.setConstraints(resId,0,0);
         GridPane.setConstraints(tfResId,1,0);
 
@@ -62,11 +62,28 @@ public class MissedMealView {
         Button btAdd = new Button("Add");
         btAdd.setOnAction(e -> {
             try {
-                int id = Integer.parseInt(tfResId.getText());
-                String missedMeal = cbMealMissed.getValue().toLowerCase();
-                String date = dpDateMissed.getValue().toString();
-                MissedMeal meal = new MissedMeal(id,missedMeal,date);
-                MissedMealController.add(meal);
+                if(tfResId.getText().equals("") || dpDateMissed.getValue() == null) {
+                    Alert alertNotExist = new Alert(
+                            Alert.AlertType.NONE,
+                            "Please make sure the information you enter is valid.",
+                            ButtonType.OK
+                    );
+                    alertNotExist.show();
+                } else if (ResidentController.idExists(Integer.parseInt(tfResId.getText()))) {
+                    int id = Integer.parseInt(tfResId.getText());
+                    String missedMeal = cbMealMissed.getValue().toLowerCase();
+                    String date = dpDateMissed.getValue().toString();
+                    MissedMeal meal = new MissedMeal(id,missedMeal,date);
+                    MissedMealController.add(meal);
+                } else {
+                    Alert alertInvalidUser = new Alert(
+                            Alert.AlertType.NONE,
+                            "Please make sure you enter a valid user.",
+                            ButtonType.OK
+                    );
+                    alertInvalidUser.show();
+                }
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

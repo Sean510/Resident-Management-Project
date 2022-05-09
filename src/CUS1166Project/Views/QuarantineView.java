@@ -31,7 +31,6 @@ public class QuarantineView {
         Label id = new Label("Resident ID: ");
         GridPane.setConstraints(id, 0, 0);
         TextField tfId = new TextField();
-        tfId.setPromptText("resident id");
         GridPane.setConstraints(tfId, 1, 0);
 
         //label and datepicker for start date
@@ -66,22 +65,30 @@ public class QuarantineView {
         Button btCreate = new Button("Add");
         btCreate.setOnAction(e -> {
             try {
-                int resId = Integer.parseInt(tfId.getText());
-                String start = dpStart.getValue().toString();
-                String end = dpEnd.getValue().toString();
-                Quarantine newQuarantine = new Quarantine(resId, start, end);
-                if (ResidentController.residentExists(new Resident(resId))) {
-                    QuarantineController.create(newQuarantine);
-                } else {
-                    Alert alertInvalid = new Alert(
+                if(tfId.getText().equals("")) {
+                    Alert alertNotExist = new Alert(
                             Alert.AlertType.NONE,
-                            "Please enter a valid user.",
+                            "Please make sure the information you enter is valid.",
                             ButtonType.OK
                     );
-                    alertInvalid.show();
-                    tfId.clear();
+                    alertNotExist.show();
+                } else {
+                    int resId = Integer.parseInt(tfId.getText());
+                    String start = dpStart.getValue().toString();
+                    String end = dpEnd.getValue().toString();
+                    Quarantine newQuarantine = new Quarantine(resId, start, end);
+                    if (ResidentController.idExists(resId)) {
+                        QuarantineController.create(newQuarantine);
+                    } else {
+                        Alert alertInvalid = new Alert(
+                                Alert.AlertType.NONE,
+                                "Please enter a valid user.",
+                                ButtonType.OK
+                        );
+                        alertInvalid.show();
+                        tfId.clear();
+                    }
                 }
-                QuarantineController.create(newQuarantine);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
