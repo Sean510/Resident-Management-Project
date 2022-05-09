@@ -31,7 +31,6 @@ public class LoginView {
 
         //username textfield
         TextField tfUsername = new TextField();
-        tfUsername.setPromptText("username"); // grayed out text prompting users to enter their username
         GridPane.setConstraints(tfUsername,1,0);
 
         //password label
@@ -40,7 +39,6 @@ public class LoginView {
 
         //password textfield
         PasswordField tfPassword = new PasswordField();
-        tfPassword.setPromptText("password");
         GridPane.setConstraints(tfPassword,1,1);
 
 
@@ -123,7 +121,7 @@ public class LoginView {
         grid.getChildren().addAll(username, tfUsername, password, tfPassword, btLogin);
 
         //casts the window with the scene in it
-        Scene scene = new Scene(grid,300,200);
+        Scene scene = new Scene(grid,300,125);
         stage.setScene(scene);
         stage.show();
     }

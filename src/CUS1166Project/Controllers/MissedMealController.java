@@ -104,4 +104,39 @@ public class MissedMealController {
         );
         alertContacted.show();
     }
+
+    //function to generate all missed meals for logs
+    public static TableView generateLogs() throws Exception {
+        ObservableList<MissedMeal> meals = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<MissedMeal, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
+
+        TableColumn<MissedMeal, String> mealMissed = new TableColumn<>("Meal Missed");
+        mealMissed.setCellValueFactory(new PropertyValueFactory<>("mealMissed"));
+
+        TableColumn<MissedMeal, String> dateMissed = new TableColumn<>("Date Missed");
+        dateMissed.setCellValueFactory(new PropertyValueFactory<>("dateMissed"));
+
+
+        tableView.getColumns().add(resId);
+        tableView.getColumns().add(mealMissed);
+        tableView.getColumns().add(dateMissed);
+
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM missedmeals ORDER BY dateMissed;");
+
+        while(rs.next()) {
+            int mResId = rs.getInt("resId");
+            String mMealMissed = rs.getString("mealMissed");
+            String mDateMissed = rs.getString("dateMissed");
+
+            meals.add(new MissedMeal(mResId, mMealMissed, mDateMissed));
+        }
+
+        tableView.setItems(meals);
+
+        return tableView;
+    }
 }

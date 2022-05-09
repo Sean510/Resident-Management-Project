@@ -89,7 +89,7 @@ public class ResidentController {
             alertResidentExists.show();
         } else {
             con.st.executeUpdate("INSERT INTO residents (id, fName, lName, unit, eContact) VALUES ("
-                    + model.getID() + ", '" + model.getFName() + "', '" + model.getLName() + "', '"
+                    + model.getId() + ", '" + model.getFName() + "', '" + model.getLName() + "', '"
                     + model.getUnit() + "', '"  + model.getEContact() + "');"
             );
 
@@ -127,7 +127,7 @@ public class ResidentController {
     public static void updateResident(Resident resident) throws Exception {
         con.st.executeUpdate("UPDATE residents SET fName = '" + resident.getFName() +
                 "', lName = '" + resident.getLName() + "', unit = '" + resident.getUnit() + "', eContact = '"
-                + resident.getEContact() + "' WHERE id = " + resident.getID() + ";"
+                + resident.getEContact() + "' WHERE id = " + resident.getId() + ";"
         );
 
         Alert alertResidentUpdated = new Alert (

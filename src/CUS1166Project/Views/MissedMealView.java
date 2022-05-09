@@ -144,4 +144,45 @@ public class MissedMealView {
         stage.setScene(scene);
         stage.show();
     }
+
+    //function to display all missed meals for logs
+    public static void displayLogs(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            try {
+                if (user.getType().equals("admin")) {
+                    AdminMenuView.display(stage, user);
+                } else if (user.getType().equals("nurse")) {
+                    NurseMenuView.display(stage, user);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+
+
+        //creates tableview and populates it with data from database
+        TableView tableView = MissedMealController.generateLogs();
+        hBox.getChildren().addAll(btBack);
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox);
+        stage.setScene(scene);
+        stage.show();
+    }
 }

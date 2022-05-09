@@ -1,12 +1,15 @@
 package CUS1166Project.Views;
 
 import CUS1166Project.Controllers.ResidentController;
+import CUS1166Project.Controllers.UserController;
 import CUS1166Project.Models.Resident;
 import CUS1166Project.Models.User;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ResidentView {
@@ -98,28 +101,24 @@ public class ResidentView {
         Label firstName = new Label("First Name: ");
         GridPane.setConstraints(firstName,0,1);
         TextField tfFirstName = new TextField();
-        tfFirstName.setPromptText("first name");
         GridPane.setConstraints(tfFirstName,1,1);
 
         //label and text field for last name
         Label lastName = new Label("Last Name: ");
         GridPane.setConstraints(lastName,0,2);
         TextField tfLastName = new TextField();
-        tfLastName.setPromptText("last name");
         GridPane.setConstraints(tfLastName,1,2);
 
         //label and text field for unit
         Label unit = new Label("Unit #: ");
         GridPane.setConstraints(unit,0,3);
         TextField tfUnit = new TextField();
-        tfUnit.setPromptText("unit");
         GridPane.setConstraints(tfUnit,1,3);
 
         //label and text field for emergency contact
         Label emergencyContact = new Label("Emergency Contact #: ");
         GridPane.setConstraints(emergencyContact,0,4);
         TextField tfEmergencyContact = new TextField();
-        tfEmergencyContact.setPromptText("emergency contact");
         GridPane.setConstraints(tfEmergencyContact,1,4);
 
         Button btBack = new Button("Back");
@@ -168,7 +167,6 @@ public class ResidentView {
         Label residentID = new Label("Resident ID: ");
         GridPane.setConstraints(residentID,0,0);
         TextField tfResidentID = new TextField();
-        tfResidentID.setPromptText("ID");
         GridPane.setConstraints(tfResidentID,1,0);
 
 
@@ -211,7 +209,6 @@ public class ResidentView {
         Label residentId = new Label("Resident ID: ");
         GridPane.setConstraints(residentId,0,0);
         TextField tfResidentID = new TextField();
-        tfResidentID.setPromptText("resident id");
         GridPane.setConstraints(tfResidentID,1,0);
 
         Button btBack = new Button("Back");
@@ -264,7 +261,7 @@ public class ResidentView {
         GridPane.setConstraints(residentID,0,0);
         TextField tfResidentID = new TextField();
         tfResidentID.setEditable(false);
-        tfResidentID.setText(Integer.toString(resident.getID()));
+        tfResidentID.setText(Integer.toString(resident.getId()));
         GridPane.setConstraints(tfResidentID,1,0);
 
         //label and textfield for resident first name
@@ -325,5 +322,36 @@ public class ResidentView {
         stage.setScene(scene);
         stage.show();
 
+    }
+
+    //function to display log of residents
+    public static void displayResidents(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            displayMenu(stage, user);
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(btBack);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = ResidentController.generateResidents();
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,430,400);
+        stage.setScene(scene);
+        stage.show();
     }
 }

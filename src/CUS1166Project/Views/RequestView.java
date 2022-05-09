@@ -3,6 +3,7 @@ package CUS1166Project.Views;
 import CUS1166Project.Controllers.RequestController;
 import CUS1166Project.Models.Request;
 import CUS1166Project.Models.User;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -249,6 +250,9 @@ public class RequestView {
         grid.setVgap(8);
         grid.setHgap(10);
 
+        //creates tableview and populates it with data from database
+        TableView tableView = RequestController.generatePendingRequests();
+
         //button to go back to previous menu
         Button btBack = new Button("Back");
         btBack.setOnAction(e -> {
@@ -256,21 +260,42 @@ public class RequestView {
         });
         GridPane.setConstraints(btBack,0,3);
 
+        //text area to add date completed for completing requests
+        DatePicker dpDateCompleted = new DatePicker();
+        dpDateCompleted.setPromptText("Date Completed");
+        GridPane.setConstraints(dpDateCompleted,0,4);
+
+        //button to complete request
+        Button btCompleteRequest = new Button("Complete Request");
+        btCompleteRequest.setOnAction(e -> {
+            try {
+                ObservableList<Request> selected = tableView.getSelectionModel().getSelectedItems();
+                int id = selected.get(0).getId();
+                String dateCompleted = dpDateCompleted.getValue().toString();
+                String completedBy = user.getUsername();
+                RequestController.completeRequest(id,dateCompleted,completedBy);
+                displayPendingRequests(stage,user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btCompleteRequest,0,5);
+
         //hbox to add buttons at bottom of tableview
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(10,10,10,10));
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(btBack);
+        hBox.setMargin(btBack,new Insets(0,40,0,0));
+        hBox.getChildren().addAll(btBack,dpDateCompleted,btCompleteRequest);
 
-        //creates tableview and populates it with data from database
-        TableView tableView = RequestController.generatePendingRequests();
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
-        Scene scene = new Scene(vBox);
+        Scene scene = new Scene(vBox,425,400);
         stage.setScene(scene);
         stage.show();
     }
 
+    //function to display nurse logs
     public static void displayNurseLogs(Stage stage, User user) throws Exception {
         stage.setTitle("SR. Housing");
 
@@ -296,7 +321,38 @@ public class RequestView {
         TableView tableView = RequestController.generateNurseLogs();
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
-        Scene scene = new Scene(vBox);
+        Scene scene = new Scene(vBox,625,400);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    //function to generate logs for all requests
+    public static void displayLogs(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            displayMenu(stage, user);
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(btBack);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = RequestController.generateLogs();
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,625,400);
         stage.setScene(scene);
         stage.show();
     }

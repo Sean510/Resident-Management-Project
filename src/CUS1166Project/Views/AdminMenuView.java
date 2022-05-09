@@ -1,5 +1,7 @@
 package CUS1166Project.Views;
 
+import CUS1166Project.Controllers.QuarantineController;
+import CUS1166Project.Models.MissedMeal;
 import CUS1166Project.Models.User;
 import javafx.css.Style;
 import javafx.geometry.Insets;
@@ -21,10 +23,10 @@ public class AdminMenuView {
         adminMenu.setVgap(8);
         adminMenu.setHgap(10);
 
-        Label username = new Label("User: " + user.getUsername());
+        Label username = new Label("Welcome, " + user.getUsername() + "!");
         GridPane.setConstraints(username,0,0);
-        Label department = new Label("Department: Administration");
-        GridPane.setConstraints(department,1,0);
+//        Label department = new Label("Department: Administration");
+//        GridPane.setConstraints(department,1,0);
 
         Label adminFunctions = new Label("Manage:");
         adminFunctions.setUnderline(true);
@@ -138,31 +140,67 @@ public class AdminMenuView {
 
 
 
-        Label markFunctions = new Label("Complete:");
+        Label markFunctions = new Label("Logs:");
         markFunctions.setUnderline(true);
         GridPane.setConstraints(markFunctions,0,7);
 
-        Button btCompleteRequest = new Button("Request");
-        btCompleteRequest.setOnAction(e -> {
+        //button to display log of users
+        Button btUsersLog = new Button("Users");
+        btUsersLog.setOnAction(e -> {
             try {
-                RequestView.displayCompleteRequest(stage, user);
+                UserView.displayUsers(stage,user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-        //sets the layout together
-        GridPane.setConstraints(btCompleteRequest,0,8);
+        GridPane.setConstraints(btUsersLog,0,8);
 
-        Button btMarkContacted = new Button("Resident Contacted");
-        btMarkContacted.setOnAction(e -> {
+        //button to display log of residents
+        Button btResidentsLog = new Button("Residents");
+        btResidentsLog.setOnAction(e -> {
             try {
-//                MissedMeal.displayMain(stage);
+                ResidentView.displayResidents(stage,user);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        GridPane.setConstraints(btResidentsLog,1,8);
+
+        //button to generate log of all requests
+        Button btRequestsLog = new Button("Requests");
+        btRequestsLog.setOnAction(e -> {
+            try {
+                RequestView.displayLogs(stage, user);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
         //sets the layout together
-        GridPane.setConstraints(btMarkContacted,1,8);
+        GridPane.setConstraints(btRequestsLog,2,8);
+
+        Button btQuarantineLogs = new Button("Quarantines");
+        btQuarantineLogs.setOnAction(e -> {
+            try {
+                QuarantineView.displayLogs(stage,user);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        //sets the layout together
+        GridPane.setConstraints(btQuarantineLogs,0,9);
+
+        //button to generate log of all quarantines
+        Button btMissedMealLogs = new Button("Missed Meals");
+            btMissedMealLogs.setOnAction(e -> {
+                try {
+                    MissedMealView.displayLogs(stage,user);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+            GridPane.setConstraints(btMissedMealLogs,1,9);
+
 
 
 
@@ -179,13 +217,15 @@ public class AdminMenuView {
         //sets the layout together
         GridPane.setConstraints(btLogout,0,12);
 
-        adminMenu.getChildren().addAll(username,department,btSearch,adminFunctions,btManageUsers,btManageResidents,
+        adminMenu.getChildren().addAll(username, adminFunctions,btManageUsers,btManageResidents,
                 create,btCreateRequest,btCreateQuarantine, btCreateMeal,
-                manageLists,btPendingRequests,btCompleteRequest,markFunctions,btMarkContacted,btUncontacted, btQuarantines,btLogout
+                manageLists,btPendingRequests,btUsersLog,
+                btResidentsLog,
+                btRequestsLog,btQuarantineLogs,btMissedMealLogs,markFunctions,btUncontacted, btQuarantines,btLogout
         );
 
         //casts the window with the scene in it
-        Scene scene = new Scene(adminMenu,500,350);
+        Scene scene = new Scene(adminMenu,500,375);
         stage.setScene(scene);
         stage.show();
     }

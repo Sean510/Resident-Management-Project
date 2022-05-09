@@ -1,5 +1,6 @@
 package CUS1166Project.Views;
 
+import CUS1166Project.Controllers.RequestController;
 import CUS1166Project.Controllers.UserController;
 import CUS1166Project.Utilities.Encryptor;
 import CUS1166Project.Models.User;
@@ -7,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class UserView {
@@ -301,6 +304,37 @@ public class UserView {
 
         //casts the window with the scene in it
         Scene scene = new Scene(grid,300,200);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    //function to display log of users
+    public static void displayUsers(Stage stage, User user) throws Exception {
+        stage.setTitle("SR. Housing");
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(10,10,10,10));
+        grid.setVgap(8);
+        grid.setHgap(10);
+
+        //button to go back to previous menu
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> {
+            displayMenu(stage, user);
+        });
+        GridPane.setConstraints(btBack,0,3);
+
+        //hbox to add buttons at bottom of tableview
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(10,10,10,10));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(btBack);
+
+        //creates tableview and populates it with data from database
+        TableView tableView = UserController.generateUsers();
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(tableView,hBox);
+        Scene scene = new Scene(vBox,385,400);
         stage.setScene(scene);
         stage.show();
     }

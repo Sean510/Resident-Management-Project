@@ -43,17 +43,26 @@ public class RequestController {
 
     //method to create a new request
     public static void createRequest(Request model) throws Exception {
-        con.st.executeUpdate("INSERT INTO requests (id, type, resId, dateCreated, description) VALUES ("
-            + model.getId() + ", '" + model.getType() + "', " + model.getResId() + ", '" + model.getDateCreated() +
-                "', '" + model.getDescription() + "');"
-        );
+        if(ResidentController.idExists(model.getResId())) {
+            con.st.executeUpdate("INSERT INTO requests (id, type, resId, dateCreated, description) VALUES ("
+                    + model.getId() + ", '" + model.getType() + "', " + model.getResId() + ", '" + model.getDateCreated() +
+                    "', '" + model.getDescription() + "');"
+            );
 
-        Alert alertRequestCreated = new Alert (
-                Alert.AlertType.NONE,
-                "Request successfully created!",
-                ButtonType.OK
-        );
-        alertRequestCreated.show();
+            Alert alertRequestCreated = new Alert (
+                    Alert.AlertType.NONE,
+                    "Request successfully created!",
+                    ButtonType.OK
+            );
+            alertRequestCreated.show();
+        } else {
+            Alert alertResidentNotExist = new Alert (
+                    Alert.AlertType.NONE,
+                    "Please make sure you enter a resident that exists.",
+                    ButtonType.OK
+            );
+            alertResidentNotExist.show();
+        }
     }
 
     //method to mark a request as completed
@@ -122,7 +131,7 @@ public class RequestController {
         return tableView;
     }
 
-    //function to generate logs of completed nurse requests
+    //function to generate logs of nurse requests
     public static TableView generateNurseLogs() throws Exception {
         ObservableList<Request> requests = FXCollections.observableArrayList();
         TableView tableView = new TableView();
@@ -156,7 +165,7 @@ public class RequestController {
         tableView.getColumns().add(dateCompleted);
         tableView.getColumns().add(completedBy);
 
-        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'nurse' AND completedBy IS NOT NULL;");
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'nurse' ORDER BY dateCreated;");
 
         while(rs.next()) {
             int rsID = rs.getInt("id");
@@ -176,7 +185,7 @@ public class RequestController {
         return tableView;
     }
 
-    //function to generate log of completed maintenance requests
+    //function to generate log of maintenance requests
     public static TableView generateMaintenanceLogs() throws Exception {
         ObservableList<Request> requests = FXCollections.observableArrayList();
         TableView tableView = new TableView();
@@ -210,7 +219,7 @@ public class RequestController {
         tableView.getColumns().add(dateCompleted);
         tableView.getColumns().add(completedBy);
 
-        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'maintenance' AND completedBy IS NOT NULL;");
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests WHERE type = 'maintenance' ORDER BY dateCreated;");
 
         while(rs.next()) {
             int rsID = rs.getInt("id");
@@ -230,4 +239,57 @@ public class RequestController {
         return tableView;
     }
 
+    //function to generate logs of all requests
+    public static TableView generateLogs() throws Exception {
+        ObservableList<Request> requests = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<Request, Integer> id = new TableColumn<>("Request ID");
+        id.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Request, String> type = new TableColumn<>("Request Type");
+        type.setCellValueFactory(new PropertyValueFactory<>("type"));
+
+        TableColumn<Request, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
+
+        TableColumn<Request, String> dateCreated = new TableColumn<>("Date Created");
+        dateCreated.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
+
+        TableColumn<Request, String> description = new TableColumn<>("Description");
+        description.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<Request, String> dateCompleted = new TableColumn<>("Date Completed");
+        dateCompleted.setCellValueFactory(new PropertyValueFactory<>("dateCompleted"));
+
+        TableColumn<Request, String> completedBy = new TableColumn<>("Completed By");
+        completedBy.setCellValueFactory(new PropertyValueFactory<>("completedBy"));
+
+        tableView.getColumns().add(id);
+        tableView.getColumns().add(type);
+        tableView.getColumns().add(resId);
+        tableView.getColumns().add(dateCreated);
+        tableView.getColumns().add(description);
+        tableView.getColumns().add(dateCompleted);
+        tableView.getColumns().add(completedBy);
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM requests ORDER BY dateCreated;");
+
+        while(rs.next()) {
+            int rsID = rs.getInt("id");
+            String rsRequestType = rs.getString("type");
+            int rsResidentID = rs.getInt("resId");
+            String rsDateCreated = rs.getString("dateCreated");
+            String rsDescription = rs.getString("description");
+            String rsDateCompleted = rs.getString("dateCompleted");
+            String rsCompletedBy = rs.getString("completedBy");
+
+            Request request = new Request(rsID, rsRequestType, rsResidentID, rsDateCreated, rsDescription, rsDateCompleted, rsCompletedBy);
+            requests.add(request);
+        }
+
+        tableView.setItems(requests);
+
+        return tableView;
+    }
  }

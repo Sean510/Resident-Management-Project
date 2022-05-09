@@ -97,4 +97,39 @@ public class QuarantineController {
 
         return tableView;
     }
+
+    //generate quarantine tableview for logs
+    public static TableView generateLogs() throws Exception {
+        ObservableList<Quarantine> quarantines = FXCollections.observableArrayList();
+        TableView tableView = new TableView();
+
+        TableColumn<Quarantine, Integer> resId = new TableColumn<>("Resident ID");
+        resId.setCellValueFactory(new PropertyValueFactory<>("resId"));
+
+        TableColumn<Quarantine, String> dateStart = new TableColumn<>("Start Date");
+        dateStart.setCellValueFactory(new PropertyValueFactory<>("dateStart"));
+
+        TableColumn<Quarantine, String> dateEnd = new TableColumn<>("End Date");
+        dateEnd.setCellValueFactory(new PropertyValueFactory<>("dateEnd"));
+
+
+        tableView.getColumns().add(resId);
+        tableView.getColumns().add(dateStart);
+        tableView.getColumns().add(dateEnd);
+
+
+        ResultSet rs = con.st.executeQuery("SELECT * FROM quarantines ORDER BY dateStart;");
+
+        while(rs.next()) {
+            int qResId = rs.getInt("resId");
+            String qDateStart = rs.getString("dateStart");
+            String qDateEnd = rs.getString("dateEnd");
+
+            quarantines.add(new Quarantine(qResId, qDateStart, qDateEnd));
+        }
+
+        tableView.setItems(quarantines);
+
+        return tableView;
+    }
 }

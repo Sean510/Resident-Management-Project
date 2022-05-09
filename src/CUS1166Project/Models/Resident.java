@@ -29,7 +29,7 @@ public class Resident {
         this.id = id;
     }
 
-    public int getID() {
+    public int getId() {
         return id;
     }
 
