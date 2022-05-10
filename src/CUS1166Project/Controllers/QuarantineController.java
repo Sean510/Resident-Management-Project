@@ -77,6 +77,9 @@ public class QuarantineController {
         TableColumn<Quarantine, String> dateEnd = new TableColumn<>("End Date");
         dateEnd.setCellValueFactory(new PropertyValueFactory<>("dateEnd"));
 
+        TableColumn<Quarantine, String> contacted = new TableColumn<>("Contacted");
+        contacted.setCellValueFactory(new PropertyValueFactory<>("contacted"));
+
 
         tableView.getColumns().add(resId);
         tableView.getColumns().add(dateStart);

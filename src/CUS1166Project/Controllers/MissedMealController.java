@@ -1,6 +1,7 @@
 package CUS1166Project.Controllers;
 
 import CUS1166Project.Models.MissedMeal;
+import CUS1166Project.Models.Quarantine;
 import CUS1166Project.Models.Request;
 import CUS1166Project.Models.Resident;
 import CUS1166Project.Utilities.Connect;
@@ -119,10 +120,14 @@ public class MissedMealController {
         TableColumn<MissedMeal, String> dateMissed = new TableColumn<>("Date Missed");
         dateMissed.setCellValueFactory(new PropertyValueFactory<>("dateMissed"));
 
+        TableColumn<Quarantine, String> contacted = new TableColumn<>("Contacted");
+        contacted.setCellValueFactory(new PropertyValueFactory<>("contacted"));
+
 
         tableView.getColumns().add(resId);
         tableView.getColumns().add(mealMissed);
         tableView.getColumns().add(dateMissed);
+        tableView.getColumns().add(contacted);
 
 
         ResultSet rs = con.st.executeQuery("SELECT * FROM missedmeals ORDER BY dateMissed;");
@@ -131,8 +136,9 @@ public class MissedMealController {
             int mResId = rs.getInt("resId");
             String mMealMissed = rs.getString("mealMissed");
             String mDateMissed = rs.getString("dateMissed");
+            String mContacted = rs.getString("contacted");
 
-            meals.add(new MissedMeal(mResId, mMealMissed, mDateMissed));
+            meals.add(new MissedMeal(mResId, mMealMissed, mDateMissed, mContacted));
         }
 
         tableView.setItems(meals);

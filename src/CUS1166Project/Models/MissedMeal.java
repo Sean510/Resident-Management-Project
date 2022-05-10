@@ -4,10 +4,10 @@ public class MissedMeal {
     int resId;
     String mealMissed;
     String dateMissed;
-    boolean contacted;
+    String contacted;
 
     //constructor with all parameters for contacted missedMeal
-    public MissedMeal(int resId, String mealMissed, String dateMissed, boolean contacted) {
+    public MissedMeal(int resId, String mealMissed, String dateMissed, String contacted) {
         this.resId = resId;
         this.mealMissed = mealMissed;
         this.dateMissed = dateMissed;
@@ -19,7 +19,7 @@ public class MissedMeal {
         this.resId = resId;
         this.mealMissed = mealMissed;
         this.dateMissed = dateMissed;
-        this.contacted = false;
+        this.contacted = "no";
     }
 
     public int getResId() {
@@ -34,7 +34,7 @@ public class MissedMeal {
         return dateMissed;
     }
 
-    public Boolean getContacted() {
+    public String getContacted() {
         return contacted;
     }
 }

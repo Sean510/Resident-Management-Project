@@ -124,7 +124,6 @@ public class RequestView {
         // RESIDENT ID //
         Label residentID = new Label("Resident ID: ");
         TextField tfResidentID = new TextField();
-        tfResidentID.setPromptText("resident id");
         GridPane.setConstraints(residentID,0,1);
         GridPane.setConstraints(tfResidentID,1,1);
 
@@ -527,7 +526,7 @@ public class RequestView {
         TableView tableView = RequestController.generateLogs();
         VBox vBox = new VBox();
         vBox.getChildren().addAll(tableView,hBox);
-        Scene scene = new Scene(vBox,625,400);
+        Scene scene = new Scene(vBox,725,400);
         stage.setScene(scene);
         stage.show();
     }
